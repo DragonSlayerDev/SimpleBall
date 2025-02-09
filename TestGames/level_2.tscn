@@ -1,0 +1,173 @@
+[gd_scene load_steps=11 format=3 uid="uid://8rh5a02skcdd"]
+
+[ext_resource type="Script" path="res://level_script.gd" id="1_2hyff"]
+[ext_resource type="PackedScene" uid="uid://byrla7tpwd3rk" path="res://player.tscn" id="2_ry36s"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_luib8"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_umpsi"]
+sky_material = SubResource("ProceduralSkyMaterial_luib8")
+
+[sub_resource type="Environment" id="Environment_ie0li"]
+background_mode = 2
+sky = SubResource("Sky_umpsi")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gd7rc"]
+size = Vector3(2, 1, 2)
+
+[sub_resource type="Animation" id="Animation_0jmqp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, -0.75)]
+}
+
+[sub_resource type="Animation" id="Animation_turhd"]
+resource_name = "closing_floor"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, -0.75), Vector3(0, 0, -1.75)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cibo1"]
+_data = {
+"RESET": SubResource("Animation_0jmqp"),
+"closing_floor": SubResource("Animation_turhd")
+}
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_p8mil"]
+size = Vector3(10, 0.1, 1)
+
+[node name="Level_2" type="Node3D"]
+script = ExtResource("1_2hyff")
+num_holes = 1
+file_path = "res://level_3.tscn"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ie0li")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="LevelObjects" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="LevelObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.125, 0)
+use_collision = true
+size = Vector3(10, 0.25, 1)
+
+[node name="Floor2" type="CSGBox3D" parent="LevelObjects/Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.75)
+size = Vector3(1, 0.25, 4.7)
+
+[node name="Hole1" type="CSGCylinder3D" parent="LevelObjects/Floor/Floor2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.75)
+operation = 2
+radius = 0.4
+height = 0.3
+sides = 32
+
+[node name="Hole1Area" type="Area3D" parent="LevelObjects/Floor/Floor2/Hole1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.872013, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelObjects/Floor/Floor2/Hole1/Hole1Area"]
+shape = SubResource("BoxShape3D_gd7rc")
+
+[node name="ClosingFloor1" type="CSGBox3D" parent="LevelObjects/Floor/Floor2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.75)
+size = Vector3(1, 0.1, 1)
+
+[node name="ClosingFloor1Anim" type="AnimationPlayer" parent="LevelObjects/Floor/Floor2/ClosingFloor1"]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_cibo1")
+}
+
+[node name="Walls" type="Node3D" parent="LevelObjects"]
+
+[node name="LongWall1" type="CSGBox3D" parent="LevelObjects/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0.55)
+use_collision = true
+size = Vector3(10, 1.2, 0.1)
+
+[node name="MiddleWall1" type="CSGBox3D" parent="LevelObjects/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.75, 0.35, -0.55)
+use_collision = true
+size = Vector3(4.5, 1.2, 0.1)
+
+[node name="MiddleWall2" type="CSGBox3D" parent="LevelObjects/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.75, 0.35, -0.55)
+use_collision = true
+size = Vector3(4.5, 1.2, 0.1)
+
+[node name="MiddleWall3" type="CSGBox3D" parent="LevelObjects/Walls"]
+transform = Transform3D(2.98023e-08, 0, 1, 0, 1, 0, -1, 0, 2.98023e-08, -0.55, 0.35, -2.85)
+use_collision = true
+size = Vector3(4.5, 1.2, 0.1)
+
+[node name="MiddleWall4" type="CSGBox3D" parent="LevelObjects/Walls"]
+transform = Transform3D(2.98023e-08, 0, 1, 0, 1, 0, -1, 0, 2.98023e-08, 0.55, 0.35, -2.85)
+use_collision = true
+size = Vector3(4.5, 1.2, 0.1)
+
+[node name="ShortWall1" type="CSGBox3D" parent="LevelObjects/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05, 0.35, 0)
+use_collision = true
+size = Vector3(0.1, 1.2, 1.2)
+
+[node name="ShortWall2" type="CSGBox3D" parent="LevelObjects/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.05, 0.35, 0)
+use_collision = true
+size = Vector3(0.1, 1.2, 1.2)
+
+[node name="ShortWall3" type="CSGBox3D" parent="LevelObjects/Walls"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.35, -5.15)
+use_collision = true
+size = Vector3(0.1, 1.2, 1.2)
+
+[node name="InvisibleWall" type="StaticBody3D" parent="LevelObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelObjects/InvisibleWall"]
+shape = SubResource("BoxShape3D_p8mil")
+
+[node name="InvisibleWall2" type="StaticBody3D" parent="LevelObjects"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0.85, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelObjects/InvisibleWall2"]
+shape = SubResource("BoxShape3D_p8mil")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0794857, 0.996836, 0, -0.996836, 0.0794857, 0, 3.5, -1.49876)
+fov = 110.0
+
+[node name="LevelEndTime" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="Player" parent="." instance=ExtResource("2_ry36s")]
+
+[connection signal="body_entered" from="LevelObjects/Floor/Floor2/Hole1/Hole1Area" to="." method="_on_hole_1_area_body_entered"]
+[connection signal="timeout" from="LevelEndTime" to="." method="_on_level_end_time_timeout"]

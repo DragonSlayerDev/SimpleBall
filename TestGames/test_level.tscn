@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://bv7nxmpi3rtpa"]
+
+[ext_resource type="MeshLibrary" uid="uid://dcefcf0jykle3" path="res://MeshLibraries/TileLibrary.tres" id="1_a70a8"]
+
+[node name="TestLevel" type="Node3D"]
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("1_a70a8")
+cell_size = Vector3(0.1, 1, 0.1)
+cell_center_y = false
+data = {
+"cells": PackedInt32Array(0, 65535, 0, 10, 65535, 0, 20, 65535, 0, 65526, 65535, 0, 65516, 65535, 0, 65516, 65527, 2, 65526, 65527, 2, 0, 65527, 2, 10, 65527, 2, 20, 65527, 2, 20, 2, 2, 10, 2, 2, 0, 2, 2, 65526, 2, 2, 65516, 2, 2, 65508, 65535, 1, 23, 65535, 1, 23, 2, 3, 23, 65527, 3, 65508, 65527, 3, 65508, 2, 3)
+}

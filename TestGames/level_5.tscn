@@ -1,0 +1,254 @@
+[gd_scene load_steps=15 format=3 uid="uid://cku1ttcj5err4"]
+
+[ext_resource type="Script" path="res://level_script.gd" id="1_dktp3"]
+[ext_resource type="PackedScene" uid="uid://byrla7tpwd3rk" path="res://player.tscn" id="2_akwq1"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cyx6l"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_cyy7h"]
+sky_material = SubResource("ProceduralSkyMaterial_cyx6l")
+
+[sub_resource type="Environment" id="Environment_2fct6"]
+background_mode = 2
+sky = SubResource("Sky_cyy7h")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jx1so"]
+size = Vector3(2, 1, 2)
+
+[sub_resource type="Animation" id="Animation_og0yx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(3.05, 0, 2)]
+}
+
+[sub_resource type="Animation" id="Animation_w0bqw"]
+resource_name = "closing_floor"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(3.05, 0, 2), Vector3(4.05, 0, 2)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fetir"]
+_data = {
+"RESET": SubResource("Animation_og0yx"),
+"closing_floor": SubResource("Animation_w0bqw")
+}
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rrmb1"]
+size = Vector3(2, 1, 2)
+
+[sub_resource type="Animation" id="Animation_bc52m"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-1.5, 0, 3.1)]
+}
+
+[sub_resource type="Animation" id="Animation_kmxra"]
+resource_name = "closing_floor"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-1.5, 0, 3.1), Vector3(-2.5, 0, 3.1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2ca37"]
+_data = {
+"RESET": SubResource("Animation_bc52m"),
+"closing_floor": SubResource("Animation_kmxra")
+}
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7s8e6"]
+size = Vector3(7, 0.1, 7)
+
+[node name="Level_5" type="Node3D"]
+script = ExtResource("1_dktp3")
+num_holes = 2
+file_path = "res://level_1.tscn"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2fct6")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 6, 0.989885)
+
+[node name="LevelObjects" type="Node3D" parent="."]
+
+[node name="Floor1" type="CSGBox3D" parent="LevelObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.125, 0)
+use_collision = true
+size = Vector3(1, 0.25, 5)
+
+[node name="Floor3" type="CSGBox3D" parent="LevelObjects/Floor1"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.5, 0, 2)
+size = Vector3(1, 0.25, 4)
+
+[node name="Hole1" type="CSGCylinder3D" parent="LevelObjects/Floor1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.05, 0, 2)
+operation = 2
+radius = 0.4
+height = 0.3
+sides = 32
+
+[node name="Hole1Area" type="Area3D" parent="LevelObjects/Floor1/Hole1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.872013, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelObjects/Floor1/Hole1/Hole1Area"]
+shape = SubResource("BoxShape3D_jx1so")
+
+[node name="ClosingFloor1" type="CSGBox3D" parent="LevelObjects/Floor1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.05, 0, 2)
+size = Vector3(1, 0.1, 1)
+
+[node name="ClosingFloor1Anim" type="AnimationPlayer" parent="LevelObjects/Floor1/ClosingFloor1"]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_fetir")
+}
+
+[node name="Floor2" type="CSGBox3D" parent="LevelObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, -0.125, 0)
+use_collision = true
+size = Vector3(4, 0.25, 1)
+
+[node name="Floor4" type="CSGBox3D" parent="LevelObjects/Floor2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.5, 0, 2.05)
+size = Vector3(3.1, 0.25, 1)
+
+[node name="Floor5" type="CSGBox3D" parent="LevelObjects/Floor2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 3.1)
+size = Vector3(4, 0.25, 1)
+
+[node name="Hole2" type="CSGCylinder3D" parent="LevelObjects/Floor2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.5, 0, 3.1)
+operation = 2
+radius = 0.4
+height = 0.3
+sides = 32
+
+[node name="Hole2Area" type="Area3D" parent="LevelObjects/Floor2/Hole2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelObjects/Floor2/Hole2/Hole2Area"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.872013, 0)
+shape = SubResource("BoxShape3D_rrmb1")
+
+[node name="ClosingFloor2" type="CSGBox3D" parent="LevelObjects/Floor2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.5, 0, 3.1)
+size = Vector3(1, 0.1, 1)
+
+[node name="ClosingFloor2Anim" type="AnimationPlayer" parent="LevelObjects/Floor2/ClosingFloor2"]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_2ca37")
+}
+
+[node name="Wall1" type="CSGBox3D" parent="LevelObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.35, -0.5)
+use_collision = true
+size = Vector3(4, 1.2, 0.1)
+
+[node name="Wall2" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.05, 0, 2.075)
+size = Vector3(4.25, 1.2, 0.1)
+
+[node name="Wall3" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 4.15)
+size = Vector3(5, 1.2, 0.1)
+
+[node name="Wall4" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -3.05, 0, 3.65)
+size = Vector3(1.1, 1.2, 0.1)
+
+[node name="Wall5" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0, 3.05)
+size = Vector3(5, 1.2, 0.1)
+
+[node name="Wall6" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.95, 0, 2.05)
+size = Vector3(2.1, 1.2, 0.1)
+
+[node name="Wall7" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0, 1.05)
+size = Vector3(2.9, 1.2, 0.1)
+
+[node name="Wall8" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.05, 0, 0.525)
+size = Vector3(1.15, 1.2, 0.1)
+
+[node name="Wall9" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0, 1.95)
+size = Vector3(4, 1.2, 0.1)
+
+[node name="Wall10" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.05, 0, -0.05)
+size = Vector3(3.9, 1.2, 0.1)
+
+[node name="Wall11" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -4.15, 0, 0.55)
+size = Vector3(5.1, 1.2, 0.1)
+
+[node name="Wall12" type="CSGBox3D" parent="LevelObjects/Wall1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6, 0, -2.05)
+size = Vector3(1.2, 1.2, 0.1)
+
+[node name="InvisibleWall" type="StaticBody3D" parent="LevelObjects"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.517871, 0.85, 0.429978)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelObjects/InvisibleWall"]
+shape = SubResource("BoxShape3D_7s8e6")
+
+[node name="LevelEndTime" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="Player1" parent="." instance=ExtResource("2_akwq1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.928274, 0.4, 0.0149035)
+
+[node name="Player2" parent="." instance=ExtResource("2_akwq1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.01628, 0.4, -1.9097)
+
+[connection signal="body_entered" from="LevelObjects/Floor1/Hole1/Hole1Area" to="." method="_on_hole_1_area_body_entered"]
+[connection signal="body_entered" from="LevelObjects/Floor2/Hole2/Hole2Area" to="." method="_on_hole_2_area_body_entered"]
+[connection signal="timeout" from="LevelEndTime" to="." method="_on_level_end_time_timeout"]
